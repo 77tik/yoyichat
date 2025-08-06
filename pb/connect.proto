@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package connect_pb;
+
+option go_package = "yoyichat/pb/connect_pb";
+
+// Msg 消息结构体
+// 对应源结构体:
+// type Msg struct {
+//    Ver       int    `json:"ver"`  // protocol version
+//    Operation int    `json:"op"`   // operation for request
+//    SeqId     string `json:"seq"`  // sequence number chosen by client
+//    Body      []byte `json:"body"` // binary body bytes
+// }
+message Msg {
+  int32 ver = 1;  // 协议版本
+  int32 op = 2;   // 操作类型
+  string seq = 3; // 客户端选择的序列号
+  bytes body = 4; // 二进制消息体
+}
+
+// PushMsgRequest 推送给单个用户的消息请求
+// 对应源结构体:
+// type PushMsgRequest struct {
+//   UserId int
+//   Msg    Msg
+// }
+message PushMsgRequest {
+  int32 user_id = 1;  // 目标用户ID
+  Msg msg = 2;        // 要推送的消息
+}
+
+// PushRoomMsgRequest 推送给房间的消息请求
+// 对应源结构体:
+// type PushRoomMsgRequest struct {
+//   RoomId int
+//   Msg    Msg
+// }
+message PushRoomMsgRequest {
+  int32 room_id = 1;  // 目标房间ID
+  Msg msg = 2;        // 要推送的消息
+}
+
+// PushRoomCountRequest 更新房间用户计数请求
+// 对应源结构体:
+// type PushRoomCountRequest struct {
+//   RoomId int
+//   Count  int
+// }
+message PushRoomCountRequest {
+  int32 room_id = 1;  // 目标房间ID
+  int32 count = 2;    // 用户数量计数
+}

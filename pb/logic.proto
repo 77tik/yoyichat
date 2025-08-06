@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package logic_pb;
+
+option go_package = "yoyichat/pb/logic_pb";
+
+// ========== 用户认证相关 ==========
+
+// LoginRequest 登录请求
+message LoginRequest {
+  string name = 1;      // 用户名
+  string password = 2;   // 密码
+}
+
+// LoginResponse 登录响应
+message LoginResponse {
+  int32 code = 1;         // 状态码
+  string auth_token = 2;   // 认证令牌
+}
+
+// RegisterRequest 注册请求
+message RegisterRequest {
+  string name = 1;      // 用户名
+  string password = 2;   // 密码
+}
+
+// RegisterReply 注册响应
+message RegisterReply {
+  int32 code = 1;         // 状态码
+  string auth_token = 2;   // 认证令牌
+}
+
+// LogoutRequest 登出请求
+message LogoutRequest {
+  string auth_token = 1;   // 认证令牌
+}
+
+// LogoutResponse 登出响应
+message LogoutResponse {
+  int32 code = 1;   // 状态码
+}
+
+// CheckAuthRequest 认证检查请求
+message CheckAuthRequest {
+  string auth_token = 1;   // 认证令牌
+}
+
+// CheckAuthResponse 认证检查响应
+message CheckAuthResponse {
+  int32 code = 1;         // 状态码
+  int32 user_id = 2;      // 用户ID
+  string user_name = 3;   // 用户名
+}
+
+// ========== 用户信息相关 ==========
+
+// GetUserInfoRequest 获取用户信息请求
+message GetUserInfoRequest {
+  int32 user_id = 1;   // 用户ID
+}
+
+// GetUserInfoResponse 获取用户信息响应
+message GetUserInfoResponse {
+  int32 code = 1;         // 状态码
+  int32 user_id = 2;      // 用户ID
+  string user_name = 3;   // 用户名
+}
+
+// ========== 连接管理相关 ==========
+
+// ConnectRequest 连接请求
+message ConnectRequest {
+  string auth_token = 1;  // 认证令牌
+  int32 room_id = 2;      // 房间ID
+  string server_id = 3;    // 服务器ID
+}
+
+// ConnectReply 连接响应
+message ConnectReply {
+  int32 user_id = 1;   // 用户ID
+}
+
+// DisConnectRequest 断开连接请求
+message DisConnectRequest {
+  int32 room_id = 1;  // 房间ID
+  int32 user_id = 2;  // 用户ID
+}
+
+// DisConnectReply 断开连接响应
+message DisConnectReply {
+  bool has = 1;   // 是否断开成功
+}
+
+// ========== 消息发送相关 ==========
+
+// SendMsg 通用消息结构
+message SendMsg {
+  int32 code = 1;           // 状态码
+  string msg = 2;           // 消息内容
+  int32 from_user_id = 3;   // 发送方用户ID
+  string from_user_name = 4; // 发送方用户名
+  int32 to_user_id = 5;     // 接收方用户ID
+  string to_user_name = 6;   // 接收方用户名
+  int32 room_id = 7;        // 房间ID
+  int32 op = 8;             // 操作类型
+  string create_time = 9;   // 创建时间
+}
+
+// SendTcpMsg TCP专用消息结构
+message SendTcpMsg {
+  int32 code = 1;           // 状态码
+  string msg = 2;           // 消息内容
+  int32 from_user_id = 3;   // 发送方用户ID
+  string from_user_name = 4; // 发送方用户名
+  int32 to_user_id = 5;     // 接收方用户ID
+  string to_user_name = 6;   // 接收方用户名
+  int32 room_id = 7;        // 房间ID
+  int32 op = 8;             // 操作类型
+  string create_time = 9;   // 创建时间
+  string auth_token = 10;   // 认证令牌 (TCP专用)
+}

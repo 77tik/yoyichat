@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package task_pb;
+
+option go_package = "yoyichat/pb/task_pb";
+
+// RedisMsg Redis 消息结构
+message RedisMsg {
+  int32 op = 1;                      // 操作类型
+  string server_id = 2;              // 服务器ID (可选)
+  int32 room_id = 3;                 // 房间ID (可选)
+  int32 user_id = 4;                 // 用户ID (可选)
+  bytes msg = 5;                     // 消息内容
+  int32 count = 6;                   // 计数
+
+  // 使用 map<string, string> 替代原始结构
+  map<string, string> room_user_info = 7;
+}
+
+// RedisRoomInfo Redis 房间信息
+message RedisRoomInfo {
+  int32 op = 1;                      // 操作类型
+  int32 room_id = 2;                 // 房间ID (可选)
+  int32 count = 3;                   // 计数 (可选)
+
+  // 使用 map<string, string> 替代原始结构
+  map<string, string> room_user_info = 4;
+}
+
+// RedisRoomCountMsg Redis 房间计数消息
+message RedisRoomCountMsg {
+  int32 count = 1;                   // 计数 (可选)
+  int32 op = 2;                      // 操作类型
+}
+
+// SuccessReply 通用成功响应
+message SuccessReply {
+  int32 code = 1;                    // 状态码
+  string msg = 2;                    // 消息内容
+}
