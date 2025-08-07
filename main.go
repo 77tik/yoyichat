@@ -1,21 +1,40 @@
 package main
 
 import (
-  "fmt"
+	"flag"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+	"yoyichat/api"
+	"yoyichat/connect"
+	"yoyichat/logic"
+	"yoyichat/task"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
-
 func main() {
-  //TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-  // to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-  s := "gopher"
-  fmt.Printf("Hello and welcome, %s!\n", s)
-
-  for i := 1; i <= 5; i++ {
-	//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-	// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-	fmt.Println("i =", 100/i)
-  }
+	var module string
+	flag.StringVar(&module, "module", "", "assign run module")
+	flag.Parse()
+	fmt.Println(fmt.Sprintf("start run %s module", module))
+	switch module {
+	case "logic":
+		logic.New().Run()
+	case "connect_websocket":
+		connect.New().Run()
+	case "connect_tcp":
+		connect.New().RunTcp()
+	case "task":
+		task.New().Run()
+	case "api":
+		api.New().Run()
+	default:
+		fmt.Println("exiting,module param error!")
+		return
+	}
+	fmt.Println(fmt.Sprintf("run %s module done!", module))
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	<-quit
+	fmt.Println("Server exiting")
 }

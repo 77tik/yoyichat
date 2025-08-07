@@ -1,6 +1,6 @@
 [common-etcd]
 host = "127.0.0.1:2379" # etcd 服务地址
-basePath = "/gochat_srv" # etcd 根路径
+basePath = "/yoyichat/services" # etcd 根路径
 serverPathLogic = "LogicRpc" # 逻辑层 注册路径
 serverPathConnect = "ConnectRpc" # 连接层 注册路径
 userName = "" # 用户名 (空表示无认证)
