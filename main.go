@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 	"yoyichat/api"
+	"yoyichat/client"
 	"yoyichat/connect"
 	"yoyichat/logic"
 	"yoyichat/task"
@@ -28,6 +29,8 @@ func main() {
 		task.New().Run()
 	case "api":
 		api.New().Run()
+	case "client": // 开启终端客户端
+		client.New().Run()
 	default:
 		fmt.Println("exiting,module param error!")
 		return

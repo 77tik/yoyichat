@@ -111,6 +111,10 @@ func (task *Task) InitConnectRpcClient() (err error) {
 	}
 
 	// 遍历所有发现的连接服务
+	// 谁能想到这个东西居然是进行前缀查询的？
+	// /services/connect/node1 -> "serverType=CONNECT&serverId=node1"
+	// /services/connect/node2 -> "serverType=CONNECT&serverId=node2"
+	// /services/connect/node3 -> "serverType=CONNECT&serverId=node3"
 	for _, connectConf := range d.GetServices() {
 		logrus.Infof("key is:%s,value is:%s", connectConf.Key, connectConf.Value)
 		//RpcConnectClients
@@ -122,7 +126,8 @@ func (task *Task) InitConnectRpcClient() (err error) {
 			continue
 		}
 
-		// 这个key是存什么的？ 是这个吗？tcp@192.168.1.100:8972
+		// 注意：在rpcx的etcd发现中，Key已经是"tcp@192.168.0.1:8972"格式
+		// 这个key是存什么的？ 是这个吗？tcp@192.168.1.100:8972，装的是connect层监听的地址
 		// 点对点服务发现，直接指定服务实例？
 		// metadata说是不适用备用发现地址
 		d, e := client.NewPeer2PeerDiscovery(connectConf.Key, "")

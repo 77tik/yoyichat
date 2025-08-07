@@ -36,6 +36,7 @@ type Config struct {
 	Logic   LogicConfig
 	Task    TaskConfig
 	Api     ApiConfig
+	Client  ClientConfig
 }
 
 func init() {
@@ -99,12 +100,19 @@ func Init() {
 			panic(err)
 		}
 
+		viper.SetConfigName("/client")
+		err = viper.MergeInConfig()
+		if err != nil {
+			panic(err)
+		}
+
 		Conf = new(Config)
 		viper.Unmarshal(&Conf.Connect)
 		viper.Unmarshal(&Conf.Common)
 		viper.Unmarshal(&Conf.Api)
 		viper.Unmarshal(&Conf.Logic)
 		viper.Unmarshal(&Conf.Task)
+		viper.Unmarshal(&Conf.Client)
 
 	})
 }
@@ -228,4 +236,12 @@ type ApiBase struct {
 
 type ApiConfig struct {
 	ApiBase ApiBase `mapstructure:"api-base"`
+}
+
+type ClientBase struct {
+	ListenPort int `mapstructure:"listenPort"`
+}
+
+type ClientConfig struct {
+	ClientBase ClientBase `mapstructure:"client-base"`
 }

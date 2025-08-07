@@ -192,6 +192,7 @@ func (rpc *RpcLogic) Push(ctx context.Context, req *logic_pb.SendMsg, reply *tas
 	}
 	// 获取接收者所在的Connection服务器层，这个存在redis中
 	logic := new(Logic)
+	// yoyichat_2918
 	userSidKey := logic.getUserKey(fmt.Sprintf("%d", sendData.ToUserId))
 	serverIdStr := RedisSessClient.Get(userSidKey).Val()
 
