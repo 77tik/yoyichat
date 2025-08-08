@@ -40,7 +40,7 @@ type Config struct {
 }
 
 func init() {
-
+	Init()
 }
 
 func getCurDir() string {

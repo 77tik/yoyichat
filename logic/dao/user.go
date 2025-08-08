@@ -48,3 +48,9 @@ func (u *User) GetUserNameByUserId(userId int) (userName string) {
 	dbIns.Table(u.TableName()).Where("id=?", userId).Take(&data)
 	return data.UserName
 }
+
+func (u *User) GetUserIdByUserName(userName string) (userId int) {
+	var data User
+	dbIns.Table(u.TableName()).Where("user_name=?", userName).Take(&data)
+	return data.Id
+}

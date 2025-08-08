@@ -16,6 +16,8 @@ import (
 )
 
 // logic 层全都注册进rpc中
+// 无关于发消息的，都是logic手动在redis中进行配置，比如记录会话，记录房间号，用户号之类的
+// 而发消息，都是把消息放入队列中（虽然这个队列在redis里面吧），当然也会通过用户key查一下serverId，因为task中要找到对应的connect层实例
 
 type RpcLogic struct{}
 
@@ -163,7 +165,7 @@ func (rpc *RpcLogic) Logout(ctx context.Context, req *logic_pb.LogoutRequest, re
 	}
 
 	logic := new(Logic)
-	// yoyichat_user01，删掉对应的这个是什么用户key？？
+	// yoyichat_user01，删掉对应的这个是什么用户key？？似乎是connect key
 	serverIdKey := logic.getUserKey(fmt.Sprintf("%d", intUserId))
 	err = RedisSessClient.Del(serverIdKey).Err()
 	if err != nil {
@@ -192,7 +194,7 @@ func (rpc *RpcLogic) Push(ctx context.Context, req *logic_pb.SendMsg, reply *tas
 	}
 	// 获取接收者所在的Connection服务器层，这个存在redis中
 	logic := new(Logic)
-	// yoyichat_2918
+	// yoyichat_2918 找到对方的connect层
 	userSidKey := logic.getUserKey(fmt.Sprintf("%d", sendData.ToUserId))
 	serverIdStr := RedisSessClient.Get(userSidKey).Val()
 
@@ -313,11 +315,13 @@ func (rpc *RpcLogic) Connect(ctx context.Context, args *logic_pb.ConnectRequest,
 	reply.UserId = int32(userId)
 	roomUserKey := logic.getRoomUserKey(strconv.Itoa(int(args.RoomId)))
 	if reply.UserId != 0 {
+		// yoyichat_29185
 		userKey := logic.getUserKey(fmt.Sprintf("%d", reply.UserId))
 		logrus.Infof("logic redis set userKey:%s, serverId : %s", userKey, args.ServerId)
 		validTime := config.RedisBaseValidTime * time.Second
 
 		// 记录用户 - 服务器 映射
+		// yoyichat_29185 : s01
 		err = RedisClient.Set(userKey, args.ServerId, validTime).Err()
 		if err != nil {
 			logrus.Warnf("logic set err:%s", err)

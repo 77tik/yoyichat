@@ -107,7 +107,7 @@ func (task *Task) InitConnectRpcClient() (err error) {
 		logrus.Fatalf("init task rpc etcd discovery client fail:%s", e.Error())
 	}
 	if len(d.GetServices()) <= 0 {
-		logrus.Panicf("no etcd server find!")
+		logrus.Panicf("no etcd server find! ")
 	}
 
 	// 遍历所有发现的连接服务

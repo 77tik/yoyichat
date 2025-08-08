@@ -1,7 +1,7 @@
 services:
   etcd:
     image: bitnami/etcd:3.4.3
-    container_name: gochat-etcd
+    container_name: yoyichat-etcd
     ports:
       - 2379:2379
     environment:
@@ -17,7 +17,7 @@ services:
 
   redis:
     image: redis:5.0.9-alpine
-    container_name: gochat-redis
+    container_name: yoyichat-redis
     command: redis-server --requirepass ""
     ports:
       - "6379:6379"
